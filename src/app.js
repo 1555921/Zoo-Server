@@ -4,7 +4,7 @@ import express from 'express';
 import errors from './middlewares/errors.js';
 import database from './libs/database.js';
 
-import explorateurRoutes from './routes/explorateur.routes.js';
+import accountRoutes from './routes/account.routes.js';
 
 const app = express();
 
@@ -16,7 +16,7 @@ app.use(express.json());
 app.get('/status', (req, res) => { res.status(200).end(); });
 app.head('/status', (req, res) => { res.status(200).end(); });
 
-app.use('/explorateurs', explorateurRoutes);
+app.use('/accounts', accountRoutes);
 
 app.use(errors);
 
