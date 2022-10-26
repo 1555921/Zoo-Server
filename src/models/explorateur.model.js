@@ -7,6 +7,7 @@ const schema = mongoose.Schema(
         motDePasse: { type: String, required: true },
         inox: { type: Number , default: 0 , required: true },
         elements: [{
+            _id : false,
             element : { type : String , required: true },
             quantity: { type: Number , required: true }
         }]
@@ -22,7 +23,8 @@ schema.virtual('creatures', {
     ref: 'Creature',
     localField:'_id',
     foreignField: 'explorateur',
-    justOne: false
+    justOne: false,
+    required:false
 });
 
 

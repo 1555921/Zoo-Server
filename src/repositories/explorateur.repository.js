@@ -9,8 +9,9 @@ const chance = new Chance();
 
 class ExplorateurRepository {
 
-    retrieveById(id) {
-        return Explorateur.findById(id);
+    retrieveByEmail(courriel) {
+        return  Explorateur.findOne({courriel: courriel});
+        
     }
 
     async login(email, password) {
@@ -58,11 +59,11 @@ class ExplorateurRepository {
 
     logoutRefresh(refreshToken) {}
 
-    transform(account) {
-        delete account.motDePasse;
-        delete account._id;
-        delete account.__v;
-        return account;
+    transform(explorateur) {
+        delete explorateur.motDePasse;
+        delete explorateur._id;
+        delete explorateur.__v;
+        return explorateur;
     }
 }
 
