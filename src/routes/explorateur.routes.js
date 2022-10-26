@@ -1,7 +1,7 @@
 import express from 'express';
 import httpErrors from 'http-errors';
 
-import accountRepository from '../repositories/account.repository.js';
+import accountRepository from '../repositories/explorateur.repository.js';
 import accountsValidator from '../validators/accounts.validator.js';
 
 import { guardAuthorizationJWT, guardRefreshTokenJWT } from '../middlewares/authorization.jwt.js';

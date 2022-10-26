@@ -3,22 +3,22 @@ import Chance from 'chance';
 import jwt from 'jsonwebtoken';
 import HttpErrors from 'http-errors';
 
-import Account from '../models/account.model.js';
+import Explorateur from '../models/explorateur.model.js';
 
 const chance = new Chance();
 
-class AccountRepository {
+class ExplorateurRepository {
 
     retrieveById(id) {
-        return Account.findById(id);
+        return Explorateur.findById(id);
     }
 
     async login(email, password) {
-        const account = await Account.findOne({ email: email });
+        const account = await Explorateur.findOne({ email: email });
         if (!account) {
             return { err: HttpErrors.Unauthorized() };
         } else {
-            const passwordValid = await argon.verify(account.passwordHash, password);
+            const passwordValid = await argon.verify(account.motDePasse, password);
             if (passwordValid) {
                 return { account };
             } else {
@@ -31,10 +31,9 @@ class AccountRepository {
 
     async create(account) {
         try {
-            account.fourDigits = chance.string({ length: 4, numeric: true });
-            account.passwordHash = await argon.hash(account.password);
+            account.motDePasse = await argon.hash(account.password);
             delete account.password;
-            return Account.create(account);
+            return Explorateur.create(account);
         } catch (err) {
             throw err;
         }
@@ -60,11 +59,11 @@ class AccountRepository {
     logoutRefresh(refreshToken) {}
 
     transform(account) {
-        delete account.passwordHash;
+        delete account.motDePasse;
         delete account._id;
         delete account.__v;
         return account;
     }
 }
 
-export default new AccountRepository();
+export default new ExplorateurRepository();
