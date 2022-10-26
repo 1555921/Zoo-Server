@@ -1,7 +1,7 @@
 {
-  "name": "5d4-jwt",
+  "name": "zoo-server",
   "version": "1.0.0",
-  "description": "Exemple JWT",
+  "description": "",
   "main": "server.js",
   "type": "module",
   "scripts": {
@@ -13,14 +13,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yannickcharron/5D4.cours.git"
+    "url": "git+https://github.com/1555921/Zoo-Server.git"
+  },
+  "author": "Louis-Philippe Brunet / Marc-Antoine Dompierre / Mathieu Soucy / Zazarit Makareean",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/1555921/Zoo-Server/issues"
   },
   "keywords": [
-    "node.js",
-    "cstj"
+    "node.js"
   ],
-  "author": "Yannick Charron",
-  "license": "ISC",
   "dependencies": {
     "argon2": "^0.29.1",
     "chalk": "^5.0.1",
