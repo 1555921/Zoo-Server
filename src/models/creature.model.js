@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
 
-const schema = mongoose.Schema(
+const creatureSchema = mongoose.Schema(
     {
+        explorateur: { type : String, required: true },
         stats: {
             life:{ type: Number, required: true},
             speed:{ type: Number, required: true},
@@ -34,4 +35,4 @@ const schema = mongoose.Schema(
     
    
 
-export default mongoose.model('Creature', schema);
+export default mongoose.model('Creature', creatureSchema);

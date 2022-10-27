@@ -5,9 +5,9 @@ import errors from './middlewares/errors.js';
 import database from './libs/database.js';
 
 import explorateurRoutes from './routes/explorateur.routes.js';
+import Creature from './models/creature.model.js';
 
 const app = express();
-
 database();
 
 app.use(cors());

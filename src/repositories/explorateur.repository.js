@@ -8,10 +8,8 @@ import Explorateur from '../models/explorateur.model.js';
 const chance = new Chance();
 
 class ExplorateurRepository {
-
     retrieveByEmail(courriel) {
-        return  Explorateur.findOne({courriel: courriel});
-        
+        return Explorateur.findOne({ courriel: courriel }).populate('creatures');
     }
 
     async login(email, password) {
@@ -60,9 +58,15 @@ class ExplorateurRepository {
     logoutRefresh(refreshToken) {}
 
     transform(explorateur) {
+        explorateur.creatures.forEach(c => {
+            delete c.id;
+            delete c._id;
+        });
         delete explorateur.motDePasse;
         delete explorateur._id;
+        delete explorateur.id;
         delete explorateur.__v;
+
         return explorateur;
     }
 }

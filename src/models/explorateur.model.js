@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const schema = mongoose.Schema(
+const explorateurSchema = mongoose.Schema(
     {
         courriel: { type: String, required: true, unique: true },
         nom: { type: String, required: true },
@@ -19,15 +19,16 @@ const schema = mongoose.Schema(
     }
 );
 
-schema.virtual('creatures', {
+explorateurSchema.virtual('creatures', {
     ref: 'Creature',
-    localField:'_id',
+    localField:'nom',
     foreignField: 'explorateur',
     justOne: false,
-    required:false
+    required:false,
+    _id:false
 });
 
 
-schema.index({ nom: 1 }, { unique: true });
+explorateurSchema.index({ nom: 1 }, { unique: true });
 
-export default mongoose.model('Explorateur', schema);
+export default mongoose.model('Explorateur', explorateurSchema);

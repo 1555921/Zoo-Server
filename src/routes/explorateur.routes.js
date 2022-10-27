@@ -22,13 +22,11 @@ class ExplorateurRoutes {
         const { courriel } = req.body;
        
         const result = await explorateurRepository.retrieveByEmail(courriel);
-        console.log(result);
+        
         if (result.nom) {
-            let explorateur = result.toObject({ getters: false, virtuals: false });
-            
-            
-
+            let explorateur = result.toObject({ getters: true, virtuals: true });
             explorateur = explorateurRepository.transform(explorateur);
+            console.log(explorateur);
             res.status(200).json(explorateur);
         } else {
             res.status(500);
