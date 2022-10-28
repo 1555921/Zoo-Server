@@ -12,27 +12,31 @@ class ExplorateurRepository {
         return Explorateur.findOne({ courriel: courriel }).populate('creatures');
     }
 
-    async login(email, password) {
-        const account = await Explorateur.findOne({ email: email });
-        if (!account) {
+    retrieveAll() {
+        return Explorateur.find().populate('creatures');
+    }
+
+    async login(courriel, motDePasse) {
+        const explorateur = await Explorateur.findOne({ courriel: courriel });
+        if (!explorateur) {
             return { err: HttpErrors.Unauthorized() };
         } else {
-            const passwordValid = await argon.verify(account.motDePasse, password);
-            if (passwordValid) {
-                return { account };
+            const motDePasseValide = await argon.verify(explorateur.motDePasse, motDePasse);
+            if (motDePasseValide) {
+                return { explorateur };
             } else {
                 return { err: HttpErrors.Unauthorized() };
             }
         }
     }
 
-    validatePassword(password, account) {}
+    validatePassword(motDePasse, explorateur) {}
 
-    async create(account) {
+    async create(explorateur) {
         try {
-            account.motDePasse = await argon.hash(account.password);
-            delete account.password;
-            return Explorateur.create(account);
+            explorateur.motDePasse = await argon.hash(explorateur.motDePasse);
+            delete explorateur.motDePasse;
+            return Explorateur.create(explorateur);
         } catch (err) {
             throw err;
         }

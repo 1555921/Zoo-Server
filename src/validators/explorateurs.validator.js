@@ -2,11 +2,11 @@ import expressValidator from 'express-validator';
 
 const { body } = expressValidator;
 
-class AccountsValidators {
+class ExplorateursValidators {
     createValidator() {
         return [];
     }
 }
 
 
-export default new AccountsValidators();
+export default new ExplorateursValidators();
