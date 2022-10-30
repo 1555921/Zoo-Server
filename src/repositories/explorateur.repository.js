@@ -17,7 +17,7 @@ class ExplorateurRepository {
     }
 
     async login(courriel, motDePasse) {
-        const explorateur = await Explorateur.findOne({ courriel: courriel });
+        const explorateur = await Explorateur.findOne({ courriel: courriel }).populate('creatures');
         console.log("help me " + courriel);
         if (!explorateur) {
             console.log("how");
@@ -66,15 +66,18 @@ class ExplorateurRepository {
     logoutRefresh(refreshToken) {}
 
     transform(explorateur) {
-        explorateur.creatures.forEach(c => {
-            delete c.id;
-            delete c._id;
-        });
+        
+        if(explorateur.creatures){
+
+            explorateur.creatures.forEach(c => {
+                delete c.id;
+                delete c._id;
+            });
+        };
         delete explorateur.motDePasse;
         delete explorateur._id;
         delete explorateur.id;
         delete explorateur.__v;
-
         return explorateur;
     }
 }

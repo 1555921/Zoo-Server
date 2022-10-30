@@ -20,7 +20,9 @@ class ExplorateurRoutes {
     }
 
     async getOne(req,res,next){
+        
         const courriel = req.params.email;
+        
        
         const result = await explorateurRepository.retrieveByEmail(courriel);
         console.log("cringe");
@@ -30,7 +32,7 @@ class ExplorateurRoutes {
             let explorateur = result.toObject({ getters: true, virtuals: true });
             explorateur = explorateurRepository.transform(explorateur);
             console.log(explorateur);
-            res.status(200).json(explorateur);
+            res.status(200).json(explorateur, tokens);
         } catch(error) {
             res.status(404).send("not found");
         }
@@ -78,16 +80,16 @@ class ExplorateurRoutes {
     }
 
     async login(req, res, next) {
-        const { email, password } = req.body;
+        const { courriel, motDePasse } = req.body;
         console.log("gros sale");
         console.log(req.body);
-        console.log(email + " " + password);
+        console.log(courriel + " " + motDePasse);
         try {
-            const result = await explorateurRepository.login(email, password);
-            console.log(result);
-            let explorateur = result.explorateur;
+            const result = await explorateurRepository.login(courriel, motDePasse);
+            let explorateur = result;
+          
             //TODO: Token
-            let tokens = explorateurRepository.generateJWT(email, explorateur._id);
+            let tokens = explorateurRepository.generateJWT(courriel, explorateur._id);
 
             explorateur = explorateurRepository.transform(explorateur);
             res.status(201).json({ explorateur, tokens });
