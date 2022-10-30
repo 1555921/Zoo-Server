@@ -18,9 +18,12 @@ class ExplorateurRepository {
 
     async login(courriel, motDePasse) {
         const explorateur = await Explorateur.findOne({ courriel: courriel });
+        console.log("help me " + courriel);
         if (!explorateur) {
+            console.log("how");
             return { err: HttpErrors.Unauthorized() };
         } else {
+            console.log("ok this is pog: " + explorateur.motDePasse + " " + motDePasse);
             const motDePasseValide = await argon.verify(explorateur.motDePasse, motDePasse);
             if (motDePasseValide) {
                 return { explorateur };
@@ -34,8 +37,9 @@ class ExplorateurRepository {
 
     async create(explorateur) {
         try {
+            console.log("password: " + explorateur.motDePasse);
             explorateur.motDePasse = await argon.hash(explorateur.motDePasse);
-            delete explorateur.motDePasse;
+            //delete explorateur.motDePasse;
             return Explorateur.create(explorateur);
         } catch (err) {
             throw err;

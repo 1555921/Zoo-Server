@@ -55,6 +55,8 @@ class ExplorateurRoutes {
 
     async post(req, res, next) {
         try {
+            console.log("top kek");
+            console.log(req.body);
             let account = await explorateurRepository.create(req.body);
             account = account.toObject({ getter: false, virtuals: false });
             //Génération du token
@@ -77,16 +79,20 @@ class ExplorateurRoutes {
 
     async login(req, res, next) {
         const { email, password } = req.body;
-
-        const result = await explorateurRepository.login(email, password);
-        if (result.account) {
-            let account = result.account.toObject({ getters: false, virtuals: false });
+        console.log("gros sale");
+        console.log(req.body);
+        console.log(email + " " + password);
+        try {
+            const result = await explorateurRepository.login(email, password);
+            console.log(result);
+            let explorateur = result.explorateur;
             //TODO: Token
-            let tokens = explorateurRepository.generateJWT(email, account._id);
+            let tokens = explorateurRepository.generateJWT(email, explorateur._id);
 
-            account = explorateurRepository.transform(account);
-            res.status(201).json({ account, tokens });
-        } else {
+            explorateur = explorateurRepository.transform(explorateur);
+            res.status(201).json({ explorateur, tokens });
+        } catch(err) {
+            return next(err);
         }
     }
 
