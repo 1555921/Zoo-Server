@@ -14,30 +14,17 @@ class ExplorateurRoutes {
         router.post('/login', this.login);
         router.post('/refresh', guardRefreshTokenJWT,  this.refreshToken);
         router.delete('/logout', this.logout);
-<<<<<<< Updated upstream
         router.get('/explorateur',this.getOne);
         router.get('/',this.getAll);
-=======
-        router.get('/:email',this.getOne);
-        router.get('/',guardAuthorizationJWT,this.getAll);
->>>>>>> Stashed changes
     }
 
     async getOne(req,res,next){
         
-<<<<<<< Updated upstream
         const { courriel } = req.body;
        
         const result = await explorateurRepository.retrieveByEmail(courriel);
         
         if (result.nom) {
-=======
-        const courriel = req.params.email;
-        const result = await explorateurRepository.retrieveByEmail(courriel);
-        console.log(req.params.email);
-        console.log(result);
-        try {
->>>>>>> Stashed changes
             let explorateur = result.toObject({ getters: true, virtuals: true });
             explorateur = explorateurRepository.transform(explorateur);
             res.status(200).json(explorateur);
