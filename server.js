@@ -3,15 +3,19 @@ import chalk from 'chalk';
 import app from './src/app.js';
 import http from 'http';
 import express from 'express';
+import dayjs from 'dayjs';
 
-//import { Server } from 'socket.io';
+import { Server } from 'socket.io';
 import IOEVENTS from './public/io-events.js';
 
 const PORT = process.env.PORT;
-//const httpServer = http.createServer(app);
-//const socketServer = new Server(httpServer);
+const httpServer = http.createServer(app);
+const socketServer = new Server(httpServer);
 
-app.listen(PORT, (err) => {
+app.use(express.static('public'));
+app.use(express.static('www'));
+
+httpServer.listen(PORT, (err) => {
 
     if (err) {
         //TODO: Logger
@@ -24,7 +28,9 @@ app.listen(PORT, (err) => {
     console.log(chalk.blue(`Server listening on port: ${PORT}`));
 });
 
-app.on(IOEVENTS.CONNECTION, async (socket) => {
+//Connexion des clients
+
+socketServer.on(IOEVENTS.CONNECTION, async (socket) => {
     console.log(socket.id);
 
     await newUser(socket);
@@ -40,7 +46,7 @@ app.on(IOEVENTS.CONNECTION, async (socket) => {
             avatar: socket.data.identity.avatar,
             name: socket.data.identity.name
         };
-        app.emit(IOEVENTS.NEW_MESSAGE, messageToBroadcast);
+        socketServer.emit(IOEVENTS.NEW_MESSAGE, messageToBroadcast);
     });
 
     //Réception d'une demande de changement de nom
@@ -66,6 +72,7 @@ async function newUser(socket) {
     const newUser = {
         id: socket.id,
         name: 'Anonyme',
+        avatar: randomAvatarImage()
     };
 
     socket.data.identity = newUser;
@@ -76,9 +83,14 @@ async function newUser(socket) {
 
 async function sendUserIdentities() {
 
-    const sockets = await app.fetchSockets();
+    const sockets = await socketServer.fetchSockets();
     const users = sockets.map(s => s.data.identity);
 
-    app.emit(IOEVENTS.LIST_USERS, users);
+    socketServer.emit(IOEVENTS.LIST_USERS, users);
     
+}
+
+function randomAvatarImage() {
+    const avatarNumber = Math.floor(Math.random() * 8 + 1);
+    return `./images/avatar${avatarNumber}.png`;
 }
