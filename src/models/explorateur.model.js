@@ -24,7 +24,6 @@ explorateurSchema.virtual('creatures', {
     localField:'nom',
     foreignField: 'explorateur',
     justOne: false,
-    required:false,
     _id:false
 });
 

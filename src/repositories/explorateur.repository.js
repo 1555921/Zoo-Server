@@ -66,14 +66,10 @@ class ExplorateurRepository {
     logoutRefresh(refreshToken) {}
 
     transform(explorateur) {
-        
-        if(explorateur.creatures){
-
             explorateur.creatures.forEach(c => {
                 delete c.id;
                 delete c._id;
             });
-        };
         delete explorateur.motDePasse;
         delete explorateur._id;
         delete explorateur.id;

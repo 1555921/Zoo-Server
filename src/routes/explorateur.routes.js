@@ -13,28 +13,36 @@ class ExplorateurRoutes {
         router.post('/', this.post);
         router.post('/login', this.login);
         router.post('/refresh', guardRefreshTokenJWT,  this.refreshToken);
-        router.get('/secure', guardAuthorizationJWT, this.secure);
         router.delete('/logout', this.logout);
-        router.get('/:email',this.getOne);
+<<<<<<< Updated upstream
+        router.get('/explorateur',this.getOne);
         router.get('/',this.getAll);
+=======
+        router.get('/:email',this.getOne);
+        router.get('/',guardAuthorizationJWT,this.getAll);
+>>>>>>> Stashed changes
     }
 
     async getOne(req,res,next){
         
-        const courriel = req.params.email;
-        
+<<<<<<< Updated upstream
+        const { courriel } = req.body;
        
         const result = await explorateurRepository.retrieveByEmail(courriel);
-        console.log("cringe");
+        
+        if (result.nom) {
+=======
+        const courriel = req.params.email;
+        const result = await explorateurRepository.retrieveByEmail(courriel);
         console.log(req.params.email);
         console.log(result);
         try {
+>>>>>>> Stashed changes
             let explorateur = result.toObject({ getters: true, virtuals: true });
             explorateur = explorateurRepository.transform(explorateur);
-            console.log(explorateur);
-            res.status(200).json(explorateur, tokens);
-        } catch(error) {
-            res.status(404).send("not found");
+            res.status(200).json(explorateur);
+        } else {
+            res.status(404);
         }
     }
 
@@ -71,14 +79,7 @@ class ExplorateurRoutes {
         }
     }
 
-    async secure(req, res, next) {
-        try {
-            res.status(200).json(req.auth);
-        } catch (err) {
-            return next(err);
-        }
-    }
-
+   
     async login(req, res, next) {
         const { courriel, motDePasse } = req.body;
         console.log("gros sale");
@@ -111,7 +112,10 @@ class ExplorateurRoutes {
 
     }
 
-    async logout(req, res, next) {}
+    async logout(req, res, next) {
+
+        
+    }
 }
 
 new ExplorateurRoutes();
