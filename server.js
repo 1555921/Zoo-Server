@@ -1,12 +1,15 @@
 import './load-env.js';
 import chalk from 'chalk';
+import cron from 'node-cron';
 import app from './src/app.js';
 import http from 'http';
 import express from 'express';
 import dayjs from 'dayjs';
+import Explorateur from "./src/models/explorateur.model.js";
 
 import { Server } from 'socket.io';
 import IOEVENTS from './public/io-events.js';
+import { isObjectIdOrHexString } from 'mongoose';
 
 const PORT = process.env.PORT;
 const httpServer = http.createServer(app);
@@ -26,6 +29,102 @@ httpServer.listen(PORT, (err) => {
 
     //TODO: Logger
     console.log(chalk.blue(`Server listening on port: ${PORT}`));
+
+});
+
+
+cron.schedule('*/5 * * * *', async() =>{
+    let explorateurs = await Explorateur.find().populate('creatures');
+    console.log(explorateurs);
+    explorateurs.forEach(explorateur => {
+        explorateur.inox = explorateur.inox + 5;
+        Explorateur.findByIdAndUpdate(explorateur.id, {inox: explorateur.inox},
+            function (err, docs) {
+if (err){
+console.log(err)
+}
+else{
+console.log("Updated User : ", docs);
+}});
+        /*console.log("KEKEKEKEKEK");
+        console.log(explorateur._id.toString());
+        console.log(explorateur.id);
+        console.log(explorateur);
+        console.log(`${explorateur.nom}`);*/
+    });
+});
+cron.schedule('0 * * * *', async() =>{ // mettre une heure
+    let explorateurs = await Explorateur.find().populate('creatures');
+    let elements = ["kek", "coom", "homos", "roche", "wtf", "omegalul"];
+    let threeElements = [];
+    let element = "";
+    while(threeElements.length < 3)
+    {
+        //console.log("help me");
+        element = elements[Math.floor(Math.random()*elements.length)];
+        if(!threeElements.includes(element))
+        {
+            console.log("first while : " + element);
+            threeElements.push(element);
+        }
+        console.log("the tree elements to add: " + threeElements);
+    }
+    //console.log(explorateurs);
+    explorateurs.forEach(explorateur => {
+        //console.log("TOP KEKEK");
+        try
+        {
+        if(explorateur.elements.length > 0)
+        {
+            explorateur.elements.forEach(element => {
+                if(threeElements.includes(element.element))
+                {
+                    element.quantity = element.quantity + Math.floor(Math.random()*3 + 1);
+                    console.log("element already exists : " + element);
+                    //threeElements.splice(threeElements.indexOf(element.element));
+                    threeElements[(threeElements.indexOf(element.element))] = "";
+                    console.log("elements after removal: " + threeElements);
+                }
+            });
+            console.log("new elements left to add: " + threeElements);
+
+        }
+        if(threeElements.length > 0)
+        {
+        threeElements.forEach(element => {
+            console.log("new element to add : " + element);
+            if(element != "")
+            {
+            explorateur.elements.push({ element: element, quantity : Math.floor(Math.random()*3 + 1)});
+            }
+        });
+        }
+        //explorateur.elements = [{ element: "kek", quantity: 15}];
+        //console.log(explorateur.elements);
+        //explorateur.elements.push({ element: "kek", quantity: 15 });
+        //explorateur.elements.push({ element: "homos", quantity: 10 });
+        //explorateur.elements.push({ element: "coom", quantity: 22 });
+        }
+        catch(err)
+        {
+            console.log(err);
+        }
+        //console.log(explorateur.elements);
+        //console.log("TOP KEKEKEK");
+        Explorateur.findByIdAndUpdate(explorateur.id, {elements : explorateur.elements},
+            function (err, docs) {
+if (err){
+console.log(err)
+}
+else{
+console.log("Updated User : ", docs);
+}});
+        /*console.log("KEKEKEKEKEK");
+        console.log(explorateur._id.toString());
+        console.log(explorateur.id);
+        console.log(explorateur);
+        console.log(`${explorateur.nom}`);*/
+    });
 });
 
 //Connexion des clients
