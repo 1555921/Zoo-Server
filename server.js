@@ -53,12 +53,11 @@ console.log("Updated User : ", docs);
         console.log(`${explorateur.nom}`);*/
     });
 });
-cron.schedule('0 * * * *', async() =>{ // mettre une heure
+cron.schedule('0 * * * *', async() =>{
     let explorateurs = await Explorateur.find().populate('creatures');
-    let elements = ["kek", "coom", "homos", "roche", "wtf", "omegalul"];
-    let threeElements = [];
-    let element = "";
-    while(threeElements.length < 3)
+    
+    //let threeElements = [];
+    /*while(threeElements.length < 3)
     {
         //console.log("help me");
         element = elements[Math.floor(Math.random()*elements.length)];
@@ -68,30 +67,32 @@ cron.schedule('0 * * * *', async() =>{ // mettre une heure
             threeElements.push(element);
         }
         console.log("the tree elements to add: " + threeElements);
-    }
+    }*/
     //console.log(explorateurs);
     explorateurs.forEach(explorateur => {
         //console.log("TOP KEKEK");
+        let elements = ["kek", "coom", "homos", "roche", "wtf", "omegalul"];
         try
         {
         if(explorateur.elements.length > 0)
         {
             explorateur.elements.forEach(element => {
-                if(threeElements.includes(element.element))
+                //if(threeElements.includes(element.element))
+                if(elements.includes(element.element))
                 {
                     element.quantity = element.quantity + Math.floor(Math.random()*3 + 1);
-                    console.log("element already exists : " + element);
-                    //threeElements.splice(threeElements.indexOf(element.element));
-                    threeElements[(threeElements.indexOf(element.element))] = "";
-                    console.log("elements after removal: " + threeElements);
+                    console.log("element already exists : " + element + " quantity : " + element.quantity);
+                    //threeElements[(threeElements.indexOf(element.element))] = "";
+                    elements[(elements.indexOf(element.element))] = "";
+                    console.log("elements after removal: " + elements);
                 }
             });
-            console.log("new elements left to add: " + threeElements);
+            console.log("new elements left to add: " + elements);
 
         }
-        if(threeElements.length > 0)
+        if(elements.length > 0)
         {
-        threeElements.forEach(element => {
+        elements.forEach(element => {
             console.log("new element to add : " + element);
             if(element != "")
             {
