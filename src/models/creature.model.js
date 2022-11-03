@@ -2,7 +2,11 @@ import mongoose from 'mongoose';
 
 const creatureSchema = mongoose.Schema(
     {
-        explorateur: { type : String, required: true },
+        explorateur: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Explorateur',
+            required: true
+        },
         stats: {
             life:{ type: Number, required: true},
             speed:{ type: Number, required: true},

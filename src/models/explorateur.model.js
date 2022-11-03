@@ -21,7 +21,7 @@ const explorateurSchema = mongoose.Schema(
 
 explorateurSchema.virtual('creatures', {
     ref: 'Creature',
-    localField:'nom',
+    localField:'_id',
     foreignField: 'explorateur',
     justOne: false,
     _id:false
