@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import HttpErrors from 'http-errors';
 
 import Explorateur from '../models/explorateur.model.js';
+import { ELEMENTS } from '../utils/constants.js';
 
 const chance = new Chance();
 
@@ -40,6 +41,7 @@ class ExplorateurRepository {
             console.log("password: " + explorateur.motDePasse);
             explorateur.motDePasse = await argon.hash(explorateur.motDePasse);
             //delete explorateur.motDePasse;
+            explorateur.elements = ELEMENTS
             return Explorateur.create(explorateur);
         } catch (err) {
             throw err;
@@ -64,12 +66,13 @@ class ExplorateurRepository {
     logout(email) {}
 
     logoutRefresh(refreshToken) {}
-
     transform(explorateur) {
+        if(explorateur.creatures){
             explorateur.creatures.forEach(c => {
                 delete c.id;
                 delete c._id;
             });
+        }
         delete explorateur.motDePasse;
         delete explorateur._id;
         delete explorateur.id;

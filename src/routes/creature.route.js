@@ -16,9 +16,8 @@ class CreatureRoutes {
     async post(req, res, next) {
         try {
             let creature = await creatureRepository.create(req.body);
-            creature = creature.toObject({ getter: false, virtuals: false });
-            //creature = creatureRepository.transform(creature);
-            res.status(201);
+            creature = creature.toObject();
+            res.status(201).end();
         } catch (err) {
             return next(err);
         }
