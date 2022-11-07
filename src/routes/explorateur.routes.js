@@ -53,13 +53,13 @@ class ExplorateurRoutes {
     async post(req, res, next) {
         try {
             console.log(req.body);
-            let account = await explorateurRepository.create(req.body);
-            account = account.toObject({ getters: false, virtuals: false });
+            let explorateur = await explorateurRepository.create(req.body);
+            explorateur = explorateur.toObject({ getters: false, virtuals: false });
             //Génération du token
-            let tokens = explorateurRepository.generateJWT(account.email, account._id);
+            let tokens = explorateurRepository.generateJWT(explorateur.email, explorateur._id);
 
-            account = explorateurRepository.transform(account);
-            res.status(201).json({ account, tokens });
+            explorateur = explorateurRepository.transform(explorateur);
+            res.status(201).json({ explorateur, tokens });
         } catch (err) {
             return next(err);
         }
@@ -86,8 +86,8 @@ class ExplorateurRoutes {
     async refreshToken(req, res, next) {
 
         try {
-            const account = await explorateurRepository.retrieveById(req.refreshToken.id);
-            const tokens = explorateurRepository.generateJWT(account.email, account._id);
+            const explorateur = await explorateurRepository.retrieveById(req.refreshToken.id);
+            const tokens = explorateurRepository.generateJWT(explorateur.email, explorateur._id);
             res.status(201).json({ tokens });
         } catch(err) {
             return next(err);
