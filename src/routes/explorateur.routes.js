@@ -54,7 +54,7 @@ class ExplorateurRoutes {
         try {
             console.log(req.body);
             let explorateur = await explorateurRepository.create(req.body);
-            explorateur = explorateur.toObject({ getters: false, virtuals: false });
+            explorateur = explorateur.toObject({ getters: false, virtuals: true });
             //Génération du token
             let tokens = explorateurRepository.generateJWT(explorateur.email, explorateur._id);
 
