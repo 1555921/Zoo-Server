@@ -77,7 +77,7 @@ class ExplorateurRoutes {
             let tokens = explorateurRepository.generateJWT(courriel, explorateur._id);
 
             explorateur = explorateurRepository.transform(explorateur);
-            res.status(201).json({ explorateur, tokens });
+            res.status(200).json({ explorateur, tokens });
         } catch(err) {
             return next(err);
         }
