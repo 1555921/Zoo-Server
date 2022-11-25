@@ -13,10 +13,6 @@ class ExplorateurRepository {
         return Explorateur.findOne({ courriel: courriel }).populate('creatures');
     }
 
-    retrieveAll() {
-        return Explorateur.find().populate('creatures');
-    }
-
     async login(courriel, motDePasse) {
         const explorateur = await Explorateur.findOne({ courriel: courriel }).populate('creatures');
         console.log("help me " + courriel);

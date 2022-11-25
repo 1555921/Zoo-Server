@@ -1,16 +1,17 @@
 import cors from 'cors';
 import express from 'express';
-
 import errors from './middlewares/errors.js';
 import database from './libs/database.js';
-
+import http from 'http';
+import { Server } from "socket.io";
 import explorateurRoutes from './routes/explorateur.routes.js';
 import creatureRoutes from './routes/creature.route.js';
 import Creature from './models/creature.model.js';
-
 const app = express();
+const httpServer = http.createServer(app);
+const io = new Server(httpServer);
 database();
-
+io.use(cors());
 app.use(cors());
 app.use(express.json());
 

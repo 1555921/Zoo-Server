@@ -2,21 +2,16 @@ import './load-env.js';
 import chalk from 'chalk';
 import cron from 'node-cron';
 import app from './src/app.js';
-import http from 'http';
-import express from 'express';
-import dayjs from 'dayjs';
-import Explorateur from './src/models/explorateur.model.js';
-
-import { Server } from 'socket.io';
+import io from './src/app.js';
+import http from './src/app.js';
+//import { Server } from 'socket.io';
 import IOEVENTS from './public/io-events.js';
 import { isObjectIdOrHexString } from 'mongoose';
 
 const PORT = process.env.PORT;
-const httpServer = http.createServer(app);
-const socketServer = new Server(httpServer);
-
-app.use(express.static('public'));
-app.use(express.static('www'));
+//const httpServer = http.createServer(app);
+//const socketServer = new Server(httpServer);
+http.listen(process.env.HTTP_PORT, (err) => {
 
 httpServer.listen(PORT, err => {
     if (err) {
@@ -26,6 +21,15 @@ httpServer.listen(PORT, err => {
 
     console.log(`Loading environment for ${process.env.NODE_ENV}`);
 
+    //TODO: Logger
+    console.log(chalk.blue(`Socket Server listening on port: ${process.env.HTTP_PORT}`));
+});
+app.listen(PORT, (err) => {
+
+    if (err) {
+        //TODO: Logger
+        process.exit(1);
+    }
     //TODO: Logger
     console.log(chalk.blue(`Server listening on port: ${PORT}`));
 });
@@ -61,8 +65,7 @@ cron.schedule('0 * * * *', async () => {
 });
 
 //Connexion des clients
-
-socketServer.on(IOEVENTS.CONNECTION, async socket => {
+io.on(IOEVENTS.CONNECTION, async (socket) => {
     console.log(socket.id);
 
     await newUser(socket);
@@ -105,10 +108,10 @@ async function newUser(socket) {
 }
 
 async function sendUserIdentities() {
-    const sockets = await socketServer.fetchSockets();
+    const sockets = await io.fetchSockets();
     const users = sockets.map(s => s.data.identity);
 
-    socketServer.emit(IOEVENTS.LIST_USERS, users);
+    io.emit(IOEVENTS.LIST_USERS, users);
 }
 
 function randomAvatarImage() {
