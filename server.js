@@ -6,14 +6,12 @@ import io from './src/app.js';
 import http from './src/app.js';
 //import { Server } from 'socket.io';
 import IOEVENTS from './public/io-events.js';
-import { isObjectIdOrHexString } from 'mongoose';
 
 const PORT = process.env.PORT;
 //const httpServer = http.createServer(app);
 //const socketServer = new Server(httpServer);
-http.listen(process.env.HTTP_PORT, (err) => {
 
-httpServer.listen(PORT, err => {
+http.listen(process.env.HTTP_PORT, (err) => {
     if (err) {
         //TODO: Logger
         process.exit(1);
