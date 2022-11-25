@@ -15,7 +15,6 @@ class ExplorateurRoutes {
         router.post('/refresh', guardRefreshTokenJWT,  this.refreshToken);
         router.delete('/logout', this.logout);
         router.get('/explorateur',this.getOne);
-        router.get('/',this.getAll);
     }
 
     async getOne(req,res,next){
@@ -30,23 +29,6 @@ class ExplorateurRoutes {
             res.status(200).json(explorateur);
         } else {
             res.status(404);
-        }
-    }
-
-    async getAll(req,res,next){
-       console.log("BRUH");
-       const result = await explorateurRepository.retrieveAll();
-        console.log(result);
-        try {
-            const transformExplorateurs = result.map(e => {
-                e = e.toObject({ getters: false, virtuals: true });
-                e = explorateurRepository.transform(e);
-                return e;
-            })
-            console.log(transformExplorateurs);
-            res.status(200).json(transformExplorateurs);
-        } catch(error) {
-            res.status(404).send("not found /" + error);
         }
     }
 
