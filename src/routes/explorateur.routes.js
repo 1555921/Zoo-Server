@@ -14,13 +14,12 @@ class ExplorateurRoutes {
         router.post('/login', this.login);
         router.post('/refresh', guardRefreshTokenJWT,  this.refreshToken);
         router.delete('/logout', this.logout);
-        router.get('/explorateur',this.getOne);
+        router.get('/explorateur/:email',this.getOne);
     }
 
     async getOne(req,res,next){
         
         const courriel = req.params.email;
-       console.log("GROS KEK SALE" + courriel);
         const result = await explorateurRepository.retrieveByEmail(courriel);
         
         if (result.nom) {
