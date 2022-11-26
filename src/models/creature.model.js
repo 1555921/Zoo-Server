@@ -25,7 +25,12 @@ const creatureSchema = mongoose.Schema(
         affinity:{ type: String, required: true},
         essence:{ type: Number, required: true},
         href:{ type: String, required: true},
-        asset:{ type: String, required: true}
+        asset:{ type: String, required: true},
+        /*exploration:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Exploration',
+            required: false
+        }*/
     },
     
     {

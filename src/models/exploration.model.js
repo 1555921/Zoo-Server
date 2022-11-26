@@ -1,8 +1,12 @@
 import mongoose from 'mongoose';
 
-const schema = mongoose.Schema(
+const explorationSchema = mongoose.Schema(
     {
-        explorateur : { type: String , required:true },
+        explorateur: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Explorateur',
+            required: true
+        },
         explorationDate: { type: Date, required: true },
         destination: { type: String, required: true },
         affinity: { type: String, required: true },
@@ -14,12 +18,12 @@ const schema = mongoose.Schema(
                     quantity: { type: Number, required:true }
                 }
             ]
-        },
+        }/*,
         creature: { 
             type: mongoose.Schema.ObjectId, 
             ref:'Creature',
             required: false
-        },
+        },*/
         
     },
     
@@ -30,7 +34,13 @@ const schema = mongoose.Schema(
     }
 
     );
-    
+    /*schema.virtual('creature', {
+        ref: 'Creature',
+        localField:'_id',
+        foreignField: 'explorateur',
+        justOne: true,
+        _id:false
+    });*/
    
 
-export default mongoose.model('Exploration', schema);
+export default mongoose.model('Exploration', explorationSchema);

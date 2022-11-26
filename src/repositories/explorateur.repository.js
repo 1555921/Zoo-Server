@@ -10,7 +10,7 @@ const chance = new Chance();
 
 class ExplorateurRepository {
     retrieveByEmail(courriel) {
-        return Explorateur.findOne({ courriel: courriel }).populate('creatures');
+        return Explorateur.findOne({ courriel: courriel }).populate('creatures').populate('explorations');
     }
 
     async login(courriel, motDePasse) {

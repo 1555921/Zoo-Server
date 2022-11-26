@@ -27,6 +27,14 @@ explorateurSchema.virtual('creatures', {
     _id:false
 });
 
+explorateurSchema.virtual('explorations', {
+    ref: 'Exploration',
+    localField:'_id',
+    foreignField: 'explorateur',
+    justOne: false,
+    _id:false
+});
+
 
 explorateurSchema.index({ nom: 1 }, { unique: true });
 

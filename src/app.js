@@ -6,6 +6,7 @@ import http from 'http';
 import { Server } from "socket.io";
 import explorateurRoutes from './routes/explorateur.routes.js';
 import creatureRoutes from './routes/creature.route.js';
+import explorationRoutes from './routes/exploration.route.js'
 import Creature from './models/creature.model.js';
 const app = express();
 const httpServer = http.createServer(app);
@@ -20,6 +21,7 @@ app.head('/status', (req, res) => { res.status(200).end(); });
 
 app.use('/explorateurs', explorateurRoutes);
 app.use('/creatures',creatureRoutes);
+app.use('/explorations',explorationRoutes);
 
 app.use(errors);
 
