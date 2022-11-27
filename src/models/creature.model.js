@@ -5,7 +5,7 @@ const creatureSchema = mongoose.Schema(
         explorateur: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Explorateur',
-            required: true
+            required: false
         },
         stats: {
             life:{ type: Number, required: true},
