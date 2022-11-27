@@ -9,12 +9,12 @@ import creatureRoutes from './routes/creature.route.js';
 import explorationRoutes from './routes/exploration.route.js'
 import Creature from './models/creature.model.js';
 const app = express();
-const httpServer = http.createServer(app);
-const io = new Server(httpServer);
 database();
-io.use(cors());
+
+
 app.use(cors());
 app.use(express.json());
+app.use(express.static('../public'));
 
 app.get('/status', (req, res) => { res.status(200).end(); });
 app.head('/status', (req, res) => { res.status(200).end(); });

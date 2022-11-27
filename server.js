@@ -1,27 +1,19 @@
 import './load-env.js';
+import { WebSocketServer } from "ws";
 import chalk from 'chalk';
 import cron from 'node-cron';
 import app from './src/app.js';
-import io from './src/app.js';
-import http from './src/app.js';
-//import { Server } from 'socket.io';
 import IOEVENTS from './public/io-events.js';
+import http from 'http';
+import { Server } from "socket.io";
+import express from 'express';
 
 const PORT = process.env.PORT;
-//const httpServer = http.createServer(app);
-//const socketServer = new Server(httpServer);
+app.use(express.static('public'));
 
-http.listen(process.env.HTTP_PORT, (err) => {
-    if (err) {
-        //TODO: Logger
-        process.exit(1);
-    }
+const socketServer = new WebSocketServer({ port: 3000 });
 
-    console.log(`Loading environment for ${process.env.NODE_ENV}`);
 
-    //TODO: Logger
-    console.log(chalk.blue(`Socket Server listening on port: ${process.env.HTTP_PORT}`));
-});
 app.listen(PORT, (err) => {
 
     if (err) {
@@ -63,11 +55,21 @@ cron.schedule('0 * * * *', async () => {
 });
 
 //Connexion des clients
-io.on(IOEVENTS.CONNECTION, async (socket) => {
-    console.log(socket.id);
-
-    await newUser(socket);
-
+socketServer.on("connection",  (socket) => {
+    console.log('connecté');
+    socket.on("message", (data) => {
+        const packet = JSON.parse(data);
+    
+        switch (packet.type) {
+          case "hello from client":
+            console.log("message");
+            break;
+        }
+      });
+    socket.send(JSON.stringify({
+        type: "hello from server",
+        content: [ 1, "2" ]
+      }));
     //Réception d'un nouveau message
     socket.on(IOEVENTS.SEND_MESSAGE, message => {
         console.log(message);
@@ -80,7 +82,9 @@ io.on(IOEVENTS.CONNECTION, async (socket) => {
         };
         socketServer.emit(IOEVENTS.NEW_MESSAGE, messageToBroadcast);
     });
-
+    socket.on("hello from client", (...args) => {
+        console.log('mnessage');
+      });
     //Réception d'une demande de changement de nom
     socket.on(IOEVENTS.CHANGE_USERNAME, identity => {
         socket.data.identity.name = identity.name;
@@ -97,8 +101,8 @@ io.on(IOEVENTS.CONNECTION, async (socket) => {
 async function newUser(socket) {
     const newUser = {
         id: socket.id,
-        name: 'Anonyme',
-        avatar: randomAvatarImage()
+        name: 'Anonyme'
+        
     };
 
     socket.data.identity = newUser;
@@ -109,10 +113,7 @@ async function sendUserIdentities() {
     const sockets = await io.fetchSockets();
     const users = sockets.map(s => s.data.identity);
 
-    io.emit(IOEVENTS.LIST_USERS, users);
+    socketServer.emit(IOEVENTS.LIST_USERS, users);
 }
 
-function randomAvatarImage() {
-    const avatarNumber = Math.floor(Math.random() * 8 + 1);
-    return `./images/avatar${avatarNumber}.png`;
-}
+

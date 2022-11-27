@@ -75,7 +75,6 @@ class ExplorationRepository {
         delete exploration._id;
         delete exploration.id;
         delete exploration.__v;
-        console.log("TRANSFORM TABARNAK");
         console.log(exploration);
         return exploration;
     }
