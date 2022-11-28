@@ -1,21 +1,21 @@
 import './load-env.js';
-import { WebSocketServer } from "ws";
+import { WebSocketServer } from 'ws';
 import chalk from 'chalk';
 import cron from 'node-cron';
 import app from './src/app.js';
+import url from 'url';
 import IOEVENTS from './public/io-events.js';
 import http from 'http';
-import { Server } from "socket.io";
+import { Server } from 'socket.io';
 import express from 'express';
 
+const clients = new Map();
 const PORT = process.env.PORT;
 app.use(express.static('public'));
 
 const socketServer = new WebSocketServer({ port: 3000 });
 
-
-app.listen(PORT, (err) => {
-
+app.listen(PORT, err => {
     if (err) {
         //TODO: Logger
         process.exit(1);
@@ -36,7 +36,6 @@ cron.schedule('*/5 * * * *', async () => {
                 console.log('Updated User : ', docs);
             }
         });
-       
     });
 });
 cron.schedule('0 * * * *', async () => {
@@ -44,8 +43,7 @@ cron.schedule('0 * * * *', async () => {
     explorateurs.forEach(explorateur => {
         try {
             explorateur.elements.forEach(element => {
-                
-                    element.quantity = element.quantity + Math.floor(Math.random() * 3 + 1);
+                element.quantity = element.quantity + Math.floor(Math.random() * 3 + 1);
             });
             explorateur.save();
         } catch (err) {
@@ -55,65 +53,41 @@ cron.schedule('0 * * * *', async () => {
 });
 
 //Connexion des clients
-socketServer.on("connection",  (socket) => {
+socketServer.on('connection',  (ws,req) => {
     console.log('connecté');
-    socket.on("message", (data) => {
-        const packet = JSON.parse(data);
+    const data = url.parse(req.url,true).query
+    const name = data.name;
+    console.log(data.name)
+    const id = uuidv4();
     
-        switch (packet.type) {
-          case "hello from client":
-            console.log("message");
-            break;
-        }
-      });
-    socket.send(JSON.stringify({
-        type: "hello from server",
-        content: [ 1, "2" ]
-      }));
-    //Réception d'un nouveau message
-    socket.on(IOEVENTS.SEND_MESSAGE, message => {
-        console.log(message);
-        const messageToBroadcast = {
-            socketId: socket.id,
-            text: message.text,
-            timestamp: dayjs(),
-            avatar: socket.data.identity.avatar,
-            name: socket.data.identity.name
-        };
-        socketServer.emit(IOEVENTS.NEW_MESSAGE, messageToBroadcast);
-    });
-    socket.on("hello from client", (...args) => {
-        console.log('mnessage');
-      });
-    //Réception d'une demande de changement de nom
-    socket.on(IOEVENTS.CHANGE_USERNAME, identity => {
-        socket.data.identity.name = identity.name;
-        //TODO: CHANGER AVATAR?
-        sendUserIdentities();
+    const metadata = { id, name  };
+    clients.set(ws, metadata);
+
+    ws.on('message', messageAsString => {
+        const message = JSON.parse(messageAsString);
+        console.log(message.message);
+        const metadata = clients.get(ws);
+
+        message.sender = metadata.id;
+        message.user = metadata.name
+        const outbound = JSON.stringify(message);
+
+        [...clients.keys()].forEach(client => {
+            client.send(outbound);
+        });
     });
 
-    socket.on(IOEVENTS.DISCONNECT, reason => {
-        console.log(reason);
-        sendUserIdentities();
-    });
+    
+    ws.on("close", () => {
+        clients.delete(ws);
+      });
+  
 });
 
-async function newUser(socket) {
-    const newUser = {
-        id: socket.id,
-        name: 'Anonyme'
-        
-    };
-
-    socket.data.identity = newUser;
-    await sendUserIdentities();
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (Math.random() * 16) | 0,
+            v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+    });
 }
-
-async function sendUserIdentities() {
-    const sockets = await io.fetchSockets();
-    const users = sockets.map(s => s.data.identity);
-
-    socketServer.emit(IOEVENTS.LIST_USERS, users);
-}
-
-
