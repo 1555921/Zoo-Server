@@ -52,12 +52,9 @@ class ExplorateurRoutes {
         const { courriel, motDePasse } = req.body;
         try {
             let explorateur = await explorateurRepository.login(courriel, motDePasse);
-            
             explorateur = explorateur.explorateur;
             explorateur = explorateur.toObject({virtuals:true});
-            //TODO: Token
             let tokens = explorateurRepository.generateJWT(courriel, explorateur._id);
-
             explorateur = explorateurRepository.transform(explorateur);
             res.status(200).json({ explorateur, tokens });
         } catch(err) {

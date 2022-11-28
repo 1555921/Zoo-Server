@@ -15,12 +15,10 @@ class ExplorateurRepository {
 
     async login(courriel, motDePasse) {
         const explorateur = await Explorateur.findOne({ courriel: courriel }).populate('creatures');
-        console.log("help me " + courriel);
         if (!explorateur) {
-            console.log("how");
+            
             return { err: HttpErrors.Unauthorized() };
         } else {
-            console.log("ok this is pog: " + explorateur.motDePasse + " " + motDePasse);
             const motDePasseValide = await argon.verify(explorateur.motDePasse, motDePasse);
             if (motDePasseValide) {
                 return { explorateur };
