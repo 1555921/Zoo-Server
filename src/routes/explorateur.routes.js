@@ -18,7 +18,7 @@ class ExplorateurRoutes {
     }
 
     async getOne(req,res,next){
-        
+        console.log("appele")
         const courriel = req.params.email;
         const result = await explorateurRepository.retrieveByEmail(courriel);
         
