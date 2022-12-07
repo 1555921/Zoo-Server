@@ -1,18 +1,18 @@
 import argon from 'argon2';
-import Chance from 'chance';
 import jwt from 'jsonwebtoken';
 import HttpErrors from 'http-errors';
-
 import Explorateur from '../models/explorateur.model.js';
 import { ELEMENTS } from '../utils/constants.js';
 
-const chance = new Chance();
 
 class ExplorateurRepository {
     retrieveByEmail(courriel) {
         return Explorateur.findOne({ courriel: courriel }).populate('creatures').populate('explorations');
     }
 
+    retrieveById(id) {
+        return Explorateur.findOne({ _id: id }).populate('creatures').populate('explorations');
+    }
     async login(courriel, motDePasse) {
         const explorateur = await Explorateur.findOne({ courriel: courriel }).populate('creatures');
         if (!explorateur) {

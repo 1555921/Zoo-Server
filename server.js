@@ -62,7 +62,7 @@ socketServer.on('connection',  (ws,req) => {
 
     ws.on('message', messageAsString => {
         const message = JSON.parse(messageAsString);
-        console.log(message.message);
+        console.log(message);
         const metadata = clients.get(ws);
 
         message.sender = metadata.id;
@@ -77,6 +77,7 @@ socketServer.on('connection',  (ws,req) => {
     
     ws.on("close", () => {
         clients.delete(ws);
+        console.log("fermé");
       });
   
 });
