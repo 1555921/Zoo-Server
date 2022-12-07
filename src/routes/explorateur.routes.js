@@ -14,12 +14,12 @@ class ExplorateurRoutes {
         router.post('/login', this.login);
         router.post('/refresh', guardRefreshTokenJWT, this.refreshToken);
         router.delete('/logout', this.logout);
-        router.get('/explorateur/:email', guardAuthorizationJWT, this.getOne);
+        router.get('/explorateur', guardAuthorizationJWT, this.getOne);
     }
 
     async getOne(req,res,next){
-        console.log("appele")
-        const courriel = req.params.email;
+        const courriel = req.body.courriel
+        //const courriel = req.params.email;
         const result = await explorateurRepository.retrieveByEmail(courriel);
         
         if (result.nom) {
