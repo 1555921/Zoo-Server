@@ -23,7 +23,6 @@ app.listen(PORT, err => {
 
 cron.schedule('*/5 * * * *', async () => {
     let explorateurs = await Explorateur.find();
-    console.log(explorateurs);
     explorateurs.forEach(explorateur => {
         explorateur.inox = explorateur.inox + 5;
         Explorateur.findByIdAndUpdate(explorateur.id, { inox: explorateur.inox }, function (err, docs) {
@@ -54,7 +53,6 @@ socketServer.on('connection',  (ws,req) => {
     console.log('connecté');
     const data = url.parse(req.url,true).query
     const name = data.name;
-    console.log(data.name)
     const id = uuidv4();
     
     const metadata = { id, name  };
@@ -64,7 +62,6 @@ socketServer.on('connection',  (ws,req) => {
         const message = JSON.parse(messageAsString);
         console.log(message);
         const metadata = clients.get(ws);
-
         message.sender = metadata.id;
         message.user = metadata.name
         const outbound = JSON.stringify(message);

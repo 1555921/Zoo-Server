@@ -17,20 +17,19 @@ class ExplorateurRoutes {
         router.get('/explorateur/:email', guardAuthorizationJWT, this.getOne);
     }
 
-    async getOne(req, res, next) {
-        try {
-            const courriel = req.params.email;
-            const result = await explorateurRepository.retrieveByEmail(courriel);
-
-            if (result.nom) {
-                let explorateur = result.toObject({ getters: true, virtuals: true });
-                explorateur = explorateurRepository.transform(explorateur);
-                console.log(explorateur);
-                res.status(200).json(explorateur);
-            } else {
-                res.status(404);
-            }
-        } catch (error) {}
+    async getOne(req,res,next){
+        console.log("appele")
+        const courriel = req.params.email;
+        const result = await explorateurRepository.retrieveByEmail(courriel);
+        
+        if (result.nom) {
+            let explorateur = result.toObject({ getters: true, virtuals: true });
+            explorateur = explorateurRepository.transform(explorateur);
+            console.log(explorateur);
+            res.status(200).json(explorateur);
+        } else {
+            res.status(404);
+        }
     }
 
     async post(req, res, next) {
