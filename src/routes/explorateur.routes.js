@@ -20,8 +20,8 @@ class ExplorateurRoutes {
     async getOne(req,res,next){
         try
         {
-            const courriel = req.body.courriel
-            //const courriel = req.params.email;
+           
+            const courriel = req.query.email;
             const result = await explorateurRepository.retrieveByEmail(courriel);
             
             if (result.nom) {
