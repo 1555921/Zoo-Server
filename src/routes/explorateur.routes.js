@@ -18,18 +18,26 @@ class ExplorateurRoutes {
     }
 
     async getOne(req,res,next){
-        const courriel = req.body.courriel
-        //const courriel = req.params.email;
-        const result = await explorateurRepository.retrieveByEmail(courriel);
-        
-        if (result.nom) {
-            let explorateur = result.toObject({ getters: true, virtuals: true });
-            explorateur = explorateurRepository.transform(explorateur);
-            console.log(explorateur);
-            res.status(200).json(explorateur);
-        } else {
-            res.status(404);
+        try
+        {
+            const courriel = req.body.courriel
+            //const courriel = req.params.email;
+            const result = await explorateurRepository.retrieveByEmail(courriel);
+            
+            if (result.nom) {
+                let explorateur = result.toObject({ getters: true, virtuals: true });
+                explorateur = explorateurRepository.transform(explorateur);
+                console.log(explorateur);
+                res.status(200).json(explorateur);
+            } else {
+                res.status(404);
+            }
         }
+        catch(err)
+        {
+            return next(err);
+        }
+        
     }
 
     async post(req, res, next) {
