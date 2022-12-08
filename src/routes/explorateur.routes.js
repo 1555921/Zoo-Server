@@ -18,18 +18,26 @@ class ExplorateurRoutes {
     }
 
     async getOne(req,res,next){
-        console.log(req.query)
-        const courriel = req.query.email;
-        const result = await explorateurRepository.retrieveByEmail(courriel);
-        console.log(result);
-        if (result.nom) {
-            let explorateur = result.toObject({ getters: true, virtuals: true });
-            explorateur = explorateurRepository.transform(explorateur);
-            console.log(explorateur);
-            res.status(200).json(explorateur);
-        } else {
-            res.status(404);
+        try
+        {
+            const courriel = req.body.courriel
+            //const courriel = req.params.email;
+            const result = await explorateurRepository.retrieveByEmail(courriel);
+            
+            if (result.nom) {
+                let explorateur = result.toObject({ getters: true, virtuals: true });
+                explorateur = explorateurRepository.transform(explorateur);
+                console.log(explorateur);
+                res.status(200).json(explorateur);
+            } else {
+                res.status(404);
+            }
         }
+        catch(err)
+        {
+            return next(err);
+        }
+        
     }
 
     async post(req, res, next) {
@@ -47,7 +55,7 @@ class ExplorateurRoutes {
     }
 
     async login(req, res, next) {
-        console.log(req.body)
+        console.log(req.body);
         const { courriel, motDePasse } = req.body;
         try {
             let explorateur = await explorateurRepository.login(courriel, motDePasse);
@@ -57,7 +65,7 @@ class ExplorateurRoutes {
             explorateur = explorateurRepository.transform(explorateur);
             res.status(200).json({ explorateur, tokens });
         } catch (err) {
-            console.log(err)
+            console.log(err);
             return next(err);
         }
     }
