@@ -32,7 +32,7 @@ class ExplorateurRepository {
 
     async create(explorateur) {
         try {
-            console.log("password: " + explorateur.motDePasse);
+            
             explorateur.motDePasse = await argon.hash(explorateur.motDePasse);
             //delete explorateur.motDePasse;
             explorateur.elements = ELEMENTS

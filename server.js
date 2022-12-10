@@ -29,7 +29,7 @@ cron.schedule('*/5 * * * *', async () => {
             if (err) {
                 console.log(err);
             } else {
-                console.log('Updated User : ', docs);
+                //console.log('Updated User : ', docs);
             }
         });
     });
@@ -60,7 +60,7 @@ socketServer.on('connection',  (ws,req) => {
 
     ws.on('message', messageAsString => {
         const message = JSON.parse(messageAsString);
-        console.log(message);
+        //console.log(message);
         const metadata = clients.get(ws);
         message.sender = metadata.id;
         message.user = metadata.name

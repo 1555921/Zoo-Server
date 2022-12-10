@@ -27,7 +27,7 @@ class ExplorateurRoutes {
             if (result.nom) {
                 let explorateur = result.toObject({ getters: true, virtuals: true });
                 explorateur = explorateurRepository.transform(explorateur);
-                console.log(explorateur);
+                
                 res.status(200).json(explorateur);
             } else {
                 res.status(404);

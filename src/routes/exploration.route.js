@@ -15,11 +15,11 @@ class ExplorationRoutes {
 
     async post(req, res, next) {
         try {
-            console.log('avant');
-            console.log(req.body);
+           
+            
             let unExplorateur = await ExplorateurRepository.retrieveByEmail(req.body.explorateur);
             req.body.explorateur = unExplorateur._id;
-            console.log(req.body);
+           
             let exploration = await explorationRepository.create(req.body);
             exploration = exploration.toObject({ getters: false, virtuals: true });
             exploration = explorationRepository.transform(exploration);
