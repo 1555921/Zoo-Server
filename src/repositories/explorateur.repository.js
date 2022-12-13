@@ -42,6 +42,8 @@ class ExplorateurRepository {
         }
     }
 
+
+
     generateJWT(email, id) {
         const accessToken = jwt.sign({ email }, process.env.JWT_TOKEN_SECRET, {
             expiresIn: process.env.JWT_TOKEN_LIFE,

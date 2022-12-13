@@ -55,7 +55,6 @@ class ExplorateurRoutes {
     }
 
     async login(req, res, next) {
-        console.log(req.body);
         const { courriel, motDePasse } = req.body;
         try {
             let explorateur = await explorateurRepository.login(courriel, motDePasse);
@@ -65,7 +64,6 @@ class ExplorateurRoutes {
             explorateur = explorateurRepository.transform(explorateur);
             res.status(200).json({ explorateur, tokens });
         } catch (err) {
-            console.log(err);
             return next(err);
         }
     }
