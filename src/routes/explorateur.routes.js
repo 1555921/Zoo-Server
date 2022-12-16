@@ -55,8 +55,8 @@ class ExplorateurRoutes {
     }
 
     async login(req, res, next) {
-        const { courriel, motDePasse } = req.body;
         try {
+            const { courriel, motDePasse } = req.body;
             let explorateur = await explorateurRepository.login(courriel, motDePasse);
             explorateur = explorateur.explorateur;
             explorateur = explorateur.toObject({ virtuals: true });
